@@ -27,8 +27,8 @@ jobs:
 
       - name: Download sources
         run: |
-          spectool -g -R "$PACKAGE_NAME".spec
           cp apt-dater.xpm ~/rpmbuild/SOURCES  # XXX ugly
+          spectool -g -R "$PACKAGE_NAME".spec
 
       - name: Build SRPM
         run: |
