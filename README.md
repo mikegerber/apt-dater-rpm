@@ -7,4 +7,4 @@ Build Fedora and Rocky Linux RPMs for apt-dater
 | ------------------ | ----------------
 | Fedora Linux 43-45 | ✅
 | Rocky Linux 8-9    | ❌ not supported
-| Rocky Linux 8-10   | ✅
+| Rocky Linux 10     | ✅
