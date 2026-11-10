@@ -27,7 +27,7 @@ jobs:
 
       - name: Download sources
         run: |
-          spectool -g "$PACKAGE_NAME".spec
+          spectool -g "$PACKAGE_NAME".spec --define "_sourcedir $(pwd)"
 
       - name: Build SRPM
         run: |
