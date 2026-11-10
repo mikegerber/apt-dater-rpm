@@ -27,12 +27,11 @@ jobs:
 
       - name: Download sources
         run: |
-          cp apt-dater.xpm ~/rpmbuild/SOURCES  # XXX ugly
-          spectool -g -R "$PACKAGE_NAME".spec
+          spectool -g "$PACKAGE_NAME".spec
 
       - name: Build SRPM
         run: |
-          rpmbuild -bs "$PACKAGE_NAME".spec
+          rpmbuild -bs "$PACKAGE_NAME".spec --define "_sourcedir $(pwd)"
 
       - name: Upload SRPM
         uses: actions/upload-artifact@v7
