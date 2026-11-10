@@ -2,6 +2,13 @@ name: Build RPMs
 
 env:
   PACKAGE_NAME: apt-dater
+  MATRIX_TARGETS: |
+    fedora-43-x86_64
+    fedora-44-x86_64
+    fedora-45-x86_64
+    # rocky+epel-8-x86_64
+    # rocky+epel-9-x86_64
+    rocky+epel-10-x86_64
 
 on:
   push:
@@ -15,12 +22,20 @@ jobs:
   srpm:
     runs-on: ubuntu-latest
     container: fedora:43
+    outputs:
+      targets: ${{ steps.targets.outputs.targets }}
 
     steps:
       - uses: actions/checkout@v7
 
       - name: Install RPM and other build tools
-        run: dnf install -y rpm-build rpmdevtools spectool
+        run: dnf install -y jq rpm-build rpmdevtools spectool
+
+      - name: Set matrix targets
+        id: targets
+        run: |
+          targets=$(printf '%s\n' "$MATRIX_TARGETS" | jq -R -s -c 'split("\n") | map(select(length > 0 and (startswith("#") | not)))')
+          echo "targets=$targets" >> "$GITHUB_OUTPUT"
 
       - name: Set up RPM build tree
         run: rpmdev-setuptree
@@ -50,13 +65,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target:
-          - fedora-43-x86_64
-          - fedora-44-x86_64
-          - fedora-45-x86_64
-          #- rocky+epel-8-x86_64
-          #- rocky+epel-9-x86_64
-          - rocky+epel-10-x86_64
+        target: ${{ fromJSON(needs.srpm.outputs.targets) }}
 
     steps:
       - name: Install Mock
